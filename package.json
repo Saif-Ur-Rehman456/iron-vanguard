@@ -38,6 +38,7 @@
     "licenses:audit": "tsx packages/tools/src/cli.ts licenses",
     "assets:pipeline": "python tools/blender/kit_batch.py",
     "budget": "node scripts/budget.mjs",
+    "smoke": "node scripts/smoke.mjs",
     "knip": "knip",
     "verify": "npm run typecheck && npm run lint && npm run content:validate && npm run test && npm run bench:sim && npm run licenses:audit && npm run build && npm run build:single && npm run budget"
   },

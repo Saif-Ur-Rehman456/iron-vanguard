@@ -187,12 +187,14 @@ test.describe('iron vanguard', () => {
     await call(page, 'window.__IV__.grenade()');
     await call(page, 'window.__IV__.fastForward(3)');
     // Wait for frames rather than for wall-clock time: CI renders this on a software
-    // rasteriser, where a single detailed frame can take most of a second.
+    // rasteriser, where a single detailed frame can take most of a second — and the
+    // first frames of a cold run, several seconds. The fps counter only updates
+    // once a frame lands.
     await page.waitForFunction(
       () =>
         (window as unknown as { __IV__: { renderer(): { fps: number } } }).__IV__.renderer().fps > 0,
       undefined,
-      { timeout: 20_000 },
+      { timeout: 60_000 },
     );
     const fps = await call<number>(page, 'window.__IV__.renderer().fps');
     expect(fps).toBeGreaterThan(0);

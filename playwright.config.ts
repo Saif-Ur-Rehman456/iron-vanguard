@@ -9,10 +9,18 @@ import { defineConfig, devices } from '@playwright/test';
  */
 const channel = process.env.PW_CHANNEL;
 
+/**
+ * CI has no GPU: every WebGL frame is drawn by Chromium's software
+ * rasteriser (SwiftShader), where a single detailed frame can take most
+ * of a second. The heavy tests legitimately need minutes there, so the
+ * budgets scale with the machine instead of failing at the local wall.
+ */
+const ci = Boolean(process.env.CI);
+
 export default defineConfig({
   testDir: './tests/e2e',
-  timeout: 90_000,
-  expect: { timeout: 15_000 },
+  timeout: ci ? 240_000 : 90_000,
+  expect: { timeout: ci ? 30_000 : 15_000 },
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
   workers: 1,
@@ -24,6 +32,18 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     ...devices['Desktop Chrome'],
     ...(channel ? { channel } : {}),
+    // On the GPU-less runner, sanction software WebGL explicitly: newer
+    // Chromium gates SwiftShader behind a flag, and an unsanctioned fallback
+    // can kill the renderer process mid-test ("session closed").
+    // --disable-dev-shm-usage is the standard CI fix for that same crash when
+    // the renderer exhausts the small shared-memory mount.
+    ...(ci
+      ? {
+          launchOptions: {
+            args: ['--enable-unsafe-swiftshader', '--disable-gpu-sandbox', '--disable-dev-shm-usage'],
+          },
+        }
+      : {}),
     viewport: { width: 1280, height: 720 },
   },
   webServer: {

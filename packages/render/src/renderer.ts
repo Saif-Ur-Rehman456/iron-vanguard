@@ -1311,7 +1311,11 @@ export class GameRenderer {
     this.fpsAccumulator += dt;
     this.fpsFrames++;
     if (this.fpsAccumulator >= 0.5) {
-      this.fps = Math.round(this.fpsFrames / this.fpsAccumulator);
+      // Integer at playable rates; one decimal below 1 fps — a software
+      // rasteriser producing a frame every 2.5 s is demonstrably alive and
+      // must not read as a stopped loop ("0 FPS").
+      const rate = this.fpsFrames / this.fpsAccumulator;
+      this.fps = rate >= 1 ? Math.round(rate) : Math.round(rate * 10) / 10;
       this.fpsAccumulator = 0;
       this.fpsFrames = 0;
     }
