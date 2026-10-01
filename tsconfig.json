@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "paths": {
+      "@iron/core": ["./packages/core/src/index.ts"],
+      "@iron/sim": ["./packages/sim/src/index.ts"],
+      "@iron/content": ["./packages/content/src/index.ts"],
+      "@iron/render": ["./packages/render/src/index.ts"],
+      "@iron/audio": ["./packages/audio/src/index.ts"],
+      "@iron/ui": ["./packages/ui/src/index.ts"],
+      "@iron/tools": ["./packages/tools/src/index.ts"]
+    }
+  },
+  "include": [
+    "packages/*/src/**/*.ts",
+    "apps/*/src/**/*.ts",
+    "apps/*/*.ts",
+    "tests/**/*.ts",
+    "scripts/**/*.mjs",
+    "*.ts"
+  ],
+  "exclude": ["**/dist/**", "**/node_modules/**", "legacy/**"]
+}

@@ -1,0 +1,137 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+# A push that supersedes an in-flight run cancels it: the newest commit is the
+# only one anyone is waiting on.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # The single source of truth for the Node version is .nvmrc.
+  NODE_VERSION: '24'
+  CI: 'true'
+
+jobs:
+  verify:
+    name: typecheck · lint · content · unit · golden · budget
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      # Fast feedback first: types and lint fail in seconds, not minutes.
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Format check (informational)
+        run: npm run format:check
+        continue-on-error: true
+
+      - name: Content + map validation
+        run: npm run content:validate
+
+      - name: Unit, integration and golden replay tests
+        run: npm test
+
+      - name: Simulation throughput budget
+        run: npm run bench:sim
+
+      - name: Licence audit
+        run: npm run licenses:audit
+
+      - name: Build product bundle
+        run: npm run build
+
+      - name: Build single-file artifact (callofduty.html)
+        run: npm run build:single
+
+      - name: Bundle size budget
+        run: npm run budget
+
+      - name: Upload the playable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: callofduty-html
+          path: apps/game/dist-single/callofduty.html
+          if-no-files-found: error
+
+      - name: Upload build stats
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-stats
+          path: apps/game/dist/assets/*.js.map
+          if-no-files-found: ignore
+
+  e2e:
+    name: end-to-end (playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      # Playwright drives a real browser: install it and its system libraries.
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e
+
+      - name: Upload traces on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            test-results
+            playwright-report
+          if-no-files-found: ignore
+
+  asset-pipeline:
+    name: asset pipeline wiring
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+
+      # Blender is not installed on the runner (it is a 300 MB dependency for a
+      # job that has no source art yet). What CI proves here is that the pipeline
+      # is wired and its guards fire — the dry run plans every export and the
+      # conformance check must not pass silently on a broken script.
+      - name: Asset pipeline dry run
+        run: python tools/blender/kit_batch.py --all --dry-run
+      - name: Conformance script runs
+        run: python tools/blender/conform.py --all
+      - name: Every source asset has a licence sidecar
+        run: |
+          missing=0
+          shopt -s nullglob
+          for blend in assets_src/blender/*.blend; do
+            sidecar="${blend%.blend}.license.json"
+            if [ ! -f "$sidecar" ]; then
+              echo "::error file=$blend::missing licence sidecar $sidecar"
+              missing=1
+            fi
+          done
+          exit $missing

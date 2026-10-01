@@ -1,0 +1,58 @@
+{
+  "name": "iron-vanguard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "IRON VANGUARD — AAA-quality browser campaign shooter. Campaign-first, deterministic simulation, license-clean art pipeline.",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @iron/game",
+    "dev:editor": "npm run dev -w @iron/editor",
+    "dev:tools": "npm run dev -w @iron/devtools",
+    "build": "npm run build -w @iron/game",
+    "build:single": "npm run build:single -w @iron/game",
+    "preview": "npm run preview -w @iron/game",
+    "typecheck": "tsc --noEmit --pretty false",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "sim": "tsx apps/harness/src/cli.ts run",
+    "replay": "tsx apps/harness/src/cli.ts replay",
+    "sweep": "tsx apps/harness/src/cli.ts sweep",
+    "hash": "tsx apps/harness/src/cli.ts hash",
+    "bench:sim": "tsx apps/harness/src/cli.ts bench",
+    "shots": "tsx apps/harness/src/shots.ts",
+    "content:validate": "tsx packages/tools/src/cli.ts content",
+    "assets:validate": "tsx packages/tools/src/cli.ts assets",
+    "assets:import": "tsx packages/tools/src/cli.ts model",
+    "licenses:audit": "tsx packages/tools/src/cli.ts licenses",
+    "assets:pipeline": "python tools/blender/kit_batch.py",
+    "budget": "node scripts/budget.mjs",
+    "knip": "knip",
+    "verify": "npm run typecheck && npm run lint && npm run content:validate && npm run test && npm run bench:sim && npm run licenses:audit && npm run build && npm run build:single && npm run budget"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.63.0",
+    "@types/node": "26.6.2",
+    "@types/three": "0.186.0",
+    "eslint": "10.11.0",
+    "knip": "6.37.0",
+    "prettier": "3.9.8",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.70.0",
+    "vite": "8.3.0",
+    "vitest": "5.0.1"
+  }
+}

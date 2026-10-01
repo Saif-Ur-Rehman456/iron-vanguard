@@ -1,0 +1,23 @@
+{
+  "name": "@iron/tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./node": {
+      "types": "./src/node.ts",
+      "import": "./src/node.ts"
+    }
+  },
+  "types": "./src/index.ts",
+  "dependencies": {
+    "@iron/core": "*",
+    "@iron/sim": "*",
+    "@iron/content": "*"
+  }
+}

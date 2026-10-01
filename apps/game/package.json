@@ -1,0 +1,23 @@
+{
+  "name": "@iron/game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:single": "vite build --config vite.single.config.ts",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@iron/audio": "*",
+    "@iron/content": "*",
+    "@iron/core": "*",
+    "@iron/render": "*",
+    "@iron/sim": "*",
+    "@iron/ui": "*"
+  },
+  "devDependencies": {
+    "vite-plugin-singlefile": "2.3.3"
+  }
+}

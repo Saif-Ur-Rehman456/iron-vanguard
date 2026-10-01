@@ -1,0 +1,190 @@
+:root {
+  --bg: #0b0d0f;
+  --panel: #12161a;
+  --line: #232a31;
+  --text: #dfe6ee;
+  --dim: #8b98a6;
+  --accent: #4fd1c5;
+  --ok: #6ee7a8;
+  --warn: #ffcf5c;
+  --bad: #ff6a6a;
+  --mono: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.5 var(--mono);
+}
+
+.iv-head {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.iv-mark {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.iv-head h1 {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+.iv-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 12px 20px 0;
+  flex-wrap: wrap;
+}
+
+.iv-tabs button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  padding: 8px 14px;
+  font: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.iv-tabs button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(79, 209, 197, 0.08);
+}
+
+.iv-panel {
+  padding: 20px;
+  max-width: 1200px;
+}
+
+.iv-panel h2 {
+  margin: 0 0 4px;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+.iv-panel h3 {
+  margin: 22px 0 8px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: var(--dim);
+  text-transform: uppercase;
+}
+
+.iv-note {
+  color: var(--dim);
+  margin: 4px 0;
+}
+
+.iv-ok {
+  color: var(--ok);
+}
+.iv-warn {
+  color: var(--warn);
+}
+.iv-bad {
+  color: var(--bad);
+}
+
+.iv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.iv-table th,
+.iv-table td {
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.iv-table th {
+  color: var(--dim);
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.iv-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.iv-controls {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin: 12px 0 18px;
+}
+
+.iv-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--dim);
+}
+
+.iv-field input,
+.iv-field select {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 7px 9px;
+  font: inherit;
+  min-width: 110px;
+}
+
+.iv-btn {
+  background: rgba(79, 209, 197, 0.12);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 16px;
+  font: inherit;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.iv-btn:hover {
+  background: rgba(79, 209, 197, 0.22);
+}
+
+.iv-foot {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 14px 20px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 12px;
+}
+
+.iv-foot code {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 3px 7px;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@iron/harness",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@iron/content": "*",
+    "@iron/core": "*",
+    "@iron/sim": "*",
+    "@iron/tools": "*"
+  }
+}

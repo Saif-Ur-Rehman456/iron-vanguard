@@ -1,0 +1,18 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "apps/*/src/main.ts",
+    "apps/*/vite.config.ts",
+    "apps/harness/src/cli.ts",
+    "packages/*/src/index.ts",
+    "packages/tools/src/cli.ts",
+    "tests/**/*.test.ts",
+    "tests/e2e/**/*.spec.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "scripts/*.mjs"
+  ],
+  "project": ["**/*.ts", "**/*.mjs"],
+  "ignore": ["legacy/**", "assets/**", "tools/blender/**"],
+  "ignoreDependencies": ["@types/node", "prettier", "knip"]
+}

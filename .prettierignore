@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-single
+legacy
+assets
+reports
+coverage
+playwright-report
+test-results
+package-lock.json
+*.md

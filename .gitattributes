@@ -1,0 +1,10 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ktx2 binary
+*.glb binary
+*.hdr binary
+*.wav binary
+*.ogg binary
+legacy/callofduty.r128.html -diff linguist-vendored
+package-lock.json -diff

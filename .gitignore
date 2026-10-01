@@ -1,0 +1,25 @@
+node_modules/
+dist/
+dist-single/
+*.tsbuildinfo
+.freebuff/
+
+# Generated shareable artifact (rebuilt by `npm run build:single`, uploaded by CI)
+callofduty.html
+reports/
+test-results/
+playwright-report/
+blob-report/
+.vite/
+coverage/
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+npm-debug.log*
+.env
+.env.local
+.captures/

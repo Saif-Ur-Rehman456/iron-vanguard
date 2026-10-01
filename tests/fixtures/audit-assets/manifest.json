@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "_comment": [
+    "Test fixture for auditModels (tests/unit/models.test.ts). Three failure modes:",
+    "prop.unledgered has a file but no ledger row, prop.badlicence has both but an",
+    "unapproved licence, prop.missing is declared with no file at all. Nothing here",
+    "is loaded by the game."
+  ],
+  "baseline": "procedural",
+  "modelBasePath": "models/",
+  "models": {
+    "prop.unledgered": {
+      "slot": "prop",
+      "id": "unledgered",
+      "file": "prop_unledgered.glb",
+      "license": "CC0",
+      "source": "fixture",
+      "author": "fixture"
+    },
+    "prop.badlicence": {
+      "slot": "prop",
+      "id": "badlicence",
+      "file": "prop_badlicence.glb",
+      "license": "Ripped-From-Game",
+      "source": "fixture",
+      "author": "fixture"
+    },
+    "prop.missing": {
+      "slot": "prop",
+      "id": "missing",
+      "file": "prop_missing.glb",
+      "license": "CC0",
+      "source": "fixture",
+      "author": "fixture"
+    }
+  }
+}

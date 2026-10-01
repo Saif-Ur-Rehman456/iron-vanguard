@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "_comment": [
+    "Logical asset id -> runtime file. Written by tools/blender/kit_batch.py and by",
+    "`npm run assets:import` (packages/tools/src/assetsImport.ts); read by the",
+    "renderer's model loader. Empty on purpose: the game renders a complete",
+    "procedural baseline, and it must keep working when this file is empty, missing,",
+    "or half-populated.",
+    "",
+    "`models` entries replace one named slot at runtime - `weapon.m4a1`,",
+    "`enemy.rifleman`, `prop.wreck` - and every entry REQUIRES slot, id, file,",
+    "license, source and author. Invariant 5 (AGENTS.md): a downloaded model with no",
+    "row in assets/licenses/ledger.csv fails `npm run licenses:audit`.",
+    "Optional fields: scale (model units -> metres), yawOffset, yOffset."
+  ],
+  "baseline": "procedural",
+  "modelBasePath": "models/",
+  "assets": {},
+  "models": {}
+}

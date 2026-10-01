@@ -1,0 +1,17 @@
+{
+  "name": "@iron/devtools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5174",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@iron/content": "*",
+    "@iron/core": "*",
+    "@iron/sim": "*",
+    "@iron/tools": "*"
+  }
+}

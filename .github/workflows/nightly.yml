@@ -1,0 +1,84 @@
+name: Nightly balance & determinism
+
+on:
+  schedule:
+    # 03:17 UTC — off the hour, so it is not queued behind every other project.
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  balance:
+    name: sweep every difficulty
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        difficulty: [recruit, regular, hardened, veteran]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+
+      - name: Balance sweep (${{ matrix.difficulty }})
+        run: |
+          npm run sweep -- \
+            --seeds=12 \
+            --seconds=420 \
+            --difficulty=${{ matrix.difficulty }} \
+            --out=balance-${{ matrix.difficulty }}.json | tee sweep-${{ matrix.difficulty }}.txt
+
+      # A difficulty that is never lethal is not a difficulty, and one that is
+      # never survivable is not shipped content. This is the regression guard on
+      # the whole tuning surface.
+      - name: Assert the difficulty curve is sane
+        run: |
+          node -e "
+            const fs = require('fs');
+            const reports = JSON.parse(fs.readFileSync('balance-${{ matrix.difficulty }}.json', 'utf8'));
+            const done = reports.filter((r) => r.outcome === 'COMPLETE').length;
+            const rate = done / reports.length;
+            console.log('${{ matrix.difficulty }}: ' + done + '/' + reports.length + ' completed (' + (rate * 100).toFixed(0) + '%)');
+            const floor = { recruit: 1, regular: 0.75, hardened: 0.5, veteran: 0 }['${{ matrix.difficulty }}'];
+            if (rate < floor) {
+              console.error('::error::completion rate ' + rate + ' below the agreed floor ' + floor);
+              process.exit(1);
+            }
+          "
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: balance-${{ matrix.difficulty }}
+          path: |
+            balance-${{ matrix.difficulty }}.json
+            sweep-${{ matrix.difficulty }}.txt
+
+  determinism:
+    name: golden replay across platforms
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+
+      # Goldens are recorded on a canonical platform. Other platforms are
+      # reported, not enforced, because libm trig differs in the last bits — the
+      # quantisation in the state hash absorbs most of it, and this job tells us
+      # when it stops absorbing it.
+      - name: Replay the golden trace
+        run: npm run replay -- --seed=7 --seconds=420
+        continue-on-error: ${{ matrix.os != 'ubuntu-latest' }}
+
+      - name: Fingerprint the RNG streams
+        run: npm run hash -- --seed=7 --seconds=5 | tail -3
